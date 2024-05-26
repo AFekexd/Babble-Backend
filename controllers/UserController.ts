@@ -4,11 +4,13 @@ import pool from "../config/db";
 //getUsers, getUserById, updateUser, deleteUser
 
 export const getUsers = async (req: Request, res: Response) => {
+  console.log("getUsers");
   try {
     const users = await pool.query(
-      "SELECT users.id, users.username, name, role, pfp FROM users, user_info"
+      "SELECT users.id, users.username, name, role, pfp FROM users, user_info WHERE users.id = user_info.id"
     );
-    res.json(users.rows);
+    console.log(users.rows);
+    //res.json(users.rows);
   } catch (err: any) {
     console.error(err.message);
   }

@@ -1,11 +1,20 @@
-import { Express } from "express";
-import { getUserById, getUsers } from "../controllers/UserController";
+import express from "express";
+import {
+  deleteUser,
+  getUserById,
+  getUsers,
+  updateUser,
+} from "../controllers/UserController";
 
-const userRoutes = (app: Express) => {
-  app.get("/users", getUsers);
-  app.get("/user/:id", getUserById);
-  //app.put("/users", updateUser);
-  //app.delete("/users", deleteUser);
-};
+//make routing for user
 
-export default userRoutes;
+const router = express.Router();
+
+router.get("/all", getUsers);
+router.get("/:id", getUserById);
+router.put("/", updateUser);
+router.delete("/:id", deleteUser);
+
+//add alias to router const and export it
+
+export { router as userRoutes };

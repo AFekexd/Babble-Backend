@@ -6,7 +6,8 @@
   "scripts": {
     "build": "npx tsc",
     "start": "node dist/index.js",
-    "dev": "nodemon -r dotenv/config server.ts"
+    "dev": "ts-node -r dotenv/config server.ts",
+    "nodemon": "nodemon -r dotenv/config server.ts"
   },
   "author": "Feke Andras",
   "license": "ISC",

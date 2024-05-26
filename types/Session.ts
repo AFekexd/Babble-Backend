@@ -2,7 +2,7 @@
 
 export interface SessionType {
   id: string;
-  userID: string;
-  addr: string;
+  userid: string;
+  ip: string;
   expires: number;
 }

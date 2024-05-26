@@ -49,8 +49,6 @@ export const login = async (req: Request, res: Response) => {
     refresh_token: await generateRefreshToken(jti, user, req.sessionID),
     type: "Credential",
   });
-
-  //upload Session
 };
 
 export const verifyToken = (req: Request, res: Response, next: any) => {
