@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 import { Request, Response } from "express";
 import pool from "../config/db";
 
@@ -9,8 +11,8 @@ export const getUsers = async (req: Request, res: Response) => {
     const users = await pool.query(
       "SELECT users.id, users.username, name, role, pfp FROM users, user_info WHERE users.id = user_info.id"
     );
-    console.log(users.rows);
-    //res.json(users.rows);
+    console.log(req.session.cookie);
+    res.json(users.rows);
   } catch (err: any) {
     console.error(err.message);
   }

@@ -5,7 +5,7 @@
   "main": "server.ts",
   "scripts": {
     "build": "npx tsc",
-    "start": "node dist/index.js",
+    "start": "NODE_ENV=production node dist/index.js",
     "dev": "ts-node -r dotenv/config server.ts",
     "nodemon": "nodemon -r dotenv/config server.ts"
   },
@@ -38,4 +38,5 @@
     "ts-node": "^10.9.2",
     "typescript": "^5.4.5"
   }
+
 }

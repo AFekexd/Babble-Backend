@@ -12,6 +12,7 @@ import cors from "cors";
 import checkSessionMiddleware from "./middlewares/SessionHandler";
 import { v4 as uuidv4 } from "uuid";
 import { userRoutes } from "./routes/userRoutes";
+import { forumRoutes } from "./routes/forumRoutes";
 dotenv.config();
 
 //for me
@@ -36,8 +37,8 @@ app.use(
   })
 );
 const port = 8080;
-var corsOptions = {
-  origin: "http://192.168.0.219:5173",
+const corsOptions = {
+  origin: "http://localhost:5173",
   optionsSuccessStatus: 200,
   credentials: true,
 };
@@ -57,6 +58,7 @@ app.get("/", (req, res) => {
   res.send("Hello World");
 });
 app.use("/users", userRoutes);
+app.use("/forum", forumRoutes);
 
 app.post("/register", register);
 app.post("/login", login);
