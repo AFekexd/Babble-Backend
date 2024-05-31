@@ -6,7 +6,11 @@ import pool from "../config/db";
 export const getForum = async (req: Request, res: Response) => {
   try {
     const forums = await pool.query(
-      "SELECT forums.id, users.id, users.username, forums.title, forums.created_at, forums.updated_at, forums.tags FROM forums, users WHERE forums.creator = users.id"
+      `SELECT forums.id as id, users.id as userID, users.username, 
+      forums.title, forums.created_at, forums.updated_at, forums.tags,
+      user_info.name
+      FROM forums, users, user_info 
+      WHERE forums.creator = users.id AND users.id = user_info.id`
     );
     res.json(forums.rows);
   } catch (err: any) {

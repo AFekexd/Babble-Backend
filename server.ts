@@ -1,11 +1,6 @@
 import express, { Express } from "express";
 import dotenv from "dotenv";
-import {
-  register,
-  login,
-  refreshToken,
-  logout,
-} from "./controllers/AuthController";
+import { register, login, logout } from "./controllers/AuthController";
 import session from "express-session";
 import cookieParser from "cookie-parser";
 import cors from "cors";
@@ -13,6 +8,7 @@ import checkSessionMiddleware from "./middlewares/SessionHandler";
 import { v4 as uuidv4 } from "uuid";
 import { userRoutes } from "./routes/userRoutes";
 import { forumRoutes } from "./routes/forumRoutes";
+import bodyParser from "body-parser";
 dotenv.config();
 
 //for me
@@ -43,6 +39,8 @@ const corsOptions = {
   credentials: true,
 };
 
+app.use(bodyParser.json({ limit: "10mb" }));
+app.use(bodyParser.urlencoded({ limit: "10mb", extended: true }));
 app.use(cors(corsOptions));
 
 app.use(cookieParser());
@@ -52,18 +50,14 @@ app.use(express.json());
 //app.use("/users", userRoutes);
 
 app.use(checkSessionMiddleware);
+//app.use(checkTokenMiddleware);
 
-app.get("/", (req, res) => {
-  console.log(req.sessionID);
-  res.send("Hello World");
-});
 app.use("/users", userRoutes);
 app.use("/forum", forumRoutes);
 
 app.post("/register", register);
 app.post("/login", login);
-//app.post("/verifyToken", verifyToken);
-app.post("/refreshToken", refreshToken);
+
 app.post("/logout", logout);
 
 //app.use("/user", userRoutes);
