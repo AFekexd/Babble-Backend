@@ -35,7 +35,7 @@ app.use(
 );
 const port = 8080;
 const corsOptions = {
-  origin: "http://localhost:5173",
+  origin: "https://babble.afeke.com",
   optionsSuccessStatus: 200,
   credentials: true,
 };

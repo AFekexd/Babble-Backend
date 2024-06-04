@@ -11,11 +11,17 @@ class User {
   }
 
   async save() {
+    console.log(this.username, this.password);
     try {
       const newUser = await pool.query(
-        "INSERT INTO users (username, password) VALUES ($1, $2) RETURNING *",
+        "INSERT INTO public.users (username, password) VALUES ($1, $2) RETURNING *",
         [this.username, this.password]
       );
+
+      await pool.query("INSERT INTO public.user_info (id) VALUES ($1)", [
+        newUser.rows[0].id,
+      ]);
+
       return newUser.rows[0];
     } catch (err) {
       return err;
