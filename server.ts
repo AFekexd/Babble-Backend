@@ -9,6 +9,7 @@ import { v4 as uuidv4 } from "uuid";
 import { userRoutes } from "./routes/userRoutes";
 import { forumRoutes } from "./routes/forumRoutes";
 import bodyParser from "body-parser";
+import { tagRoutes } from "./routes/tagRoutes";
 dotenv.config();
 
 //for me
@@ -54,6 +55,7 @@ app.use(checkSessionMiddleware);
 
 app.use("/users", userRoutes);
 app.use("/forum", forumRoutes);
+app.use("/tags", tagRoutes);
 
 app.post("/register", register);
 app.post("/login", login);

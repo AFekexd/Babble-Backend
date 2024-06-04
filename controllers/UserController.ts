@@ -23,7 +23,7 @@ export const getUserById = async (req: Request, res: Response) => {
   const { id } = req.params;
   try {
     const user = await pool.query(
-      "SELECT users.username, users.id, user_info.name, user_info.email, user_info.phone, user_info.role, user_info.pfp FROM users, user_info WHERE users.id = $1 and users.id = user_info.id",
+      "SELECT users.username, users.id, user_info.name, user_info.email, user_info.phone, user_info.role FROM users, user_info WHERE users.id = $1 and users.id = user_info.id",
       [id]
     );
     res.json(user.rows[0]);

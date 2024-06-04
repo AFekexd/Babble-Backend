@@ -39,7 +39,7 @@ export const login = async (req: Request, res: Response) => {
     },
     process.env.TOKEN_SECRET || "",
     {
-      expiresIn: "3m",
+      expiresIn: "3h",
     }
   );
   await uploadSession(req, user.id);
