@@ -1,14 +1,15 @@
 {
   "name": "babblebackend",
   "version": "1.0.0",
+  "type": "module",
   "description": "Backend for the app called BABBLE ",
   "main": "server.ts",
   "scripts": {
-    "build": "npx tsc",
-    "start": "NODE_ENV=production node dist/index.js",
-    "dev": "ts-node -r dotenv/config server.ts",
-    "nodemon": "nodemon -r dotenv/config server.ts"
-  },
+  "build": "npx tsc",
+  "start": "NODE_ENV=production node dist/index.js",
+  "dev": "node --loader ts-node/esm --experimental-specifier-resolution=node -r dotenv/config server.ts",
+  "nodemon": "nodemon --exec \"node --loader ts-node/esm --experimental-specifier-resolution=node -r dotenv/config\" server.ts"
+},
   "author": "Feke Andras",
   "license": "ISC",
   "dependencies": {
@@ -36,6 +37,6 @@
     "@types/uuid": "^9.0.8",
     "nodemon": "^3.1.0",
     "ts-node": "^10.9.2",
-    "typescript": "^5.4.5"
+    "typescript": "^5.6.3"
   }
 }
