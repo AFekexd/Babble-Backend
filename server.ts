@@ -10,6 +10,7 @@ import { userRoutes } from "./routes/userRoutes";
 import { forumRoutes } from "./routes/forumRoutes";
 import bodyParser from "body-parser";
 import { tagRoutes } from "./routes/tagRoutes";
+import { errorHandler } from "./middlewares/errorHandler";
 dotenv.config();
 
 //for me
@@ -52,6 +53,8 @@ app.use(express.json());
 
 app.use(checkSessionMiddleware);
 //app.use(checkTokenMiddleware);
+
+app.use(errorHandler);
 
 app.use("/users", userRoutes);
 app.use("/forum", forumRoutes);

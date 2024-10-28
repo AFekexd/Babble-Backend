@@ -57,6 +57,63 @@ FROM
   }
 };
 
+export const filterForum = async (req: Request, res: Response) => {
+  //filter by tag_id or/and name, username, title and return like getForum
+  const { tag_id, name, username, title, limit, offset } = req.query;
+
+  try {
+    const forums = await pool.query(
+      `SELECT 
+    forums.id as id, 
+    users.id as userID, 
+    users.username, 
+    forums.title, 
+    forums.created_at, 
+    forums.updated_at,
+    user_info.name, 
+    COALESCE(array_agg(tags.name), ARRAY[]::varchar[]) as tag_names
+FROM 
+    forums
+JOIN 
+    users ON forums.creator = users.id
+JOIN 
+    user_info ON users.id = user_info.id
+LEFT JOIN 
+    unnest(forums.tags) as tag_id ON true
+LEFT JOIN 
+    public.tags ON tags.id = tag_id
+WHERE
+    tags.id = $1 OR
+    users.username = $2 OR
+    user_info.name = $3 OR
+    forums.title = $4
+GROUP BY
+
+    forums.id, 
+    users.id, 
+    users.username, 
+    forums.title, 
+    forums.created_at, 
+    forums.updated_at,
+    user_info.name
+ORDER BY
+    forums.created_at DESC
+LIMIT
+    $5
+OFFSET
+    $6
+`,
+      [tag_id, username, name, title, limit, offset]
+    );
+
+    const pages = forums.rows.length;
+
+    res.json({ forums: forums.rows, total: pages });
+  } catch (err: any) {
+    console.error(err.message);
+  }
+};
+
 export const getThreadById = async (req: Request, res: Response) => {
   const { id } = req.params;
   console.log(id);

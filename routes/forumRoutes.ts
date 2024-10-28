@@ -2,6 +2,7 @@ import express from "express";
 import {
   createThread,
   deleteThread,
+  filterForum,
   getForum,
   getThreadById,
   reportThread,
@@ -21,6 +22,8 @@ import {
 const router = express.Router();
 
 router.get("/", getForum);
+
+router.get("/search", filterForum);
 router.get("/thread/:id", getThreadById);
 router.post("/thread", createThread);
 router.put("/thread/:id", updateThread);
