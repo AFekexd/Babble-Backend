@@ -21,7 +21,6 @@ export const register = async (req: Request, res: Response) => {
 };
 
 export const login = async (req: Request, res: Response) => {
-  console.log(req.sessionID);
   const user = await User.findOne(req.body.username);
   if (!user) return res.status(400).send("Username or password is wrong");
 
@@ -70,14 +69,8 @@ const generateRefreshToken = async (jti: string, user: User, sid: string) => {
 export const logout = async (req: Request, res: Response) => {
   console.log("LOGOUT");
   // console.log(req);
-  await deleteSession(req.sessionID);
-
-  req.session.destroy((err) => {
-    if (err) {
-      //console.log(err);
-      res.status(400).send("Failed to logout");
-    }
+  await deleteSession(req.sessionID).then(() => {
     res.status(200).send("Logged out");
   });
+  req.session.destroy();
 };
-//TODO SESSION DB TAROLNI

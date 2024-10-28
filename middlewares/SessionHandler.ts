@@ -35,9 +35,12 @@ const checkSession = async (req: Request, res: Response) => {
       console.log("No session found");
       return false;
     }
+    console.log("dbsessionIp: " + dbSession.ip);
+
     if (
       dbSession.expires < Date.now() ||
-      dbSession.ip !== req.ip
+      dbSession.ip !==
+        (req.headers["x-forwarded-for"] || req.socket.remoteAddress)
       //||
       //dbSession.userID !== localSession.user.id
     ) {
