@@ -5,7 +5,7 @@ export const getThreadComments = async (req: Request, res: Response) => {
   const { id } = req.params;
   try {
     const comments = await pool.query(
-      "SELECT * FROM comments WHERE thread_id = $1",
+      "SELECT * FROM forum_comments WHERE thread_id = $1",
       [id]
     );
     res.json(comments.rows);
@@ -18,7 +18,7 @@ export const createComment = async (req: Request, res: Response) => {
   const { content, thread_id, user_id } = req.body;
   try {
     const comment = await pool.query(
-      "INSERT INTO comments (content, thread_id, user_id, created_at, updated_at) VALUES ($1, $2, $3, $4, $5) RETURNING *",
+      "INSERT INTO forum_comments (content, thread_id, user_id, created_at, updated_at) VALUES ($1, $2, $3, $4, $5) RETURNING *",
       [content, thread_id, user_id, new Date(), new Date()]
     );
     res.json(comment);
@@ -32,7 +32,7 @@ export const updateComment = async (req: Request, res: Response) => {
   const { content } = req.body;
   try {
     const comment = await pool.query(
-      "UPDATE comments SET content = $1, updated_at = $2 WHERE id = $3 RETURNING *",
+      "UPDATE forum_comments SET content = $1, updated_at = $2 WHERE id = $3 RETURNING *",
       [content, new Date(), id]
     );
     res.json(comment);
@@ -44,7 +44,7 @@ export const updateComment = async (req: Request, res: Response) => {
 export const deleteComment = async (req: Request, res: Response) => {
   const { id } = req.params;
   try {
-    await pool.query("DELETE FROM comments WHERE id = $1", [id]);
+    await pool.query("DELETE FROM forum_comments WHERE id = $1", [id]);
     console.log("Comment was deleted");
     res.json("Comment was deleted");
   } catch (err: any) {
@@ -56,7 +56,7 @@ export const upvoteComment = async (req: Request, res: Response) => {
   const { id } = req.params;
   try {
     const comment = await pool.query(
-      "UPDATE comments SET upvotes = upvotes + 1 WHERE id = $1 RETURNING *",
+      "UPDATE forum_comments SET upvotes = upvotes + 1 WHERE id = $1 RETURNING *",
       [id]
     );
     res.json(comment.rows[0]);
@@ -69,7 +69,7 @@ export const downvoteComment = async (req: Request, res: Response) => {
   const { id } = req.params;
   try {
     const comment = await pool.query(
-      "UPDATE comments SET downvotes = downvotes + 1 WHERE id = $1 RETURNING *",
+      "UPDATE forum_comments SET downvotes = downvotes + 1 WHERE id = $1 RETURNING *",
       [id]
     );
     res.json(comment.rows[0]);
