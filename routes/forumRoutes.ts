@@ -11,10 +11,9 @@ import {
 import {
   createComment,
   deleteComment,
-  downvoteComment,
   getThreadComments,
   updateComment,
-  upvoteComment,
+  voteComment,
 } from "../controllers/CommentController";
 
 //make routing for user
@@ -31,10 +30,9 @@ router.delete("/thread/:id", deleteThread);
 router.post("/thread/report/:id", reportThread);
 
 router.get("/thread/:id/comment", getThreadComments);
-router.post("/thread/:id/comment", createComment);
+router.post("/thread/comment", createComment);
 router.put("/thread/:id/comment/:commentId", updateComment);
 router.delete("/thread/:id/comment/:commentId", deleteComment);
-router.put("/thread/:id/comment/:commentId/upvote", upvoteComment);
-router.put("/thread/:id/comment/:commentId/downvote", downvoteComment);
+router.put("/thread/comment/:type/:commentId/:userId", voteComment);
 
 export { router as forumRoutes };

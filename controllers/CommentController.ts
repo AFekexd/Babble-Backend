@@ -5,7 +5,9 @@ export const getThreadComments = async (req: Request, res: Response) => {
   const { id } = req.params;
   try {
     const comments = await pool.query(
-      "SELECT * FROM forum_comments WHERE thread_id = $1",
+      `SELECT forum_comments.id, user_id, content, upvotes, downvotes, updated_at as date, user_info.name as uname FROM forum_comments, 
+      user_info WHERE thread_id = $1 
+      AND forum_comments.user_id = user_info.id ORDER BY date DESC`,
       [id]
     );
     res.json(comments.rows);
@@ -15,7 +17,9 @@ export const getThreadComments = async (req: Request, res: Response) => {
 };
 
 export const createComment = async (req: Request, res: Response) => {
-  const { content, thread_id, user_id } = req.body;
+  const { content, user_id, thread_id } = req.body;
+  console.log(req.body);
+  console.log(thread_id);
   try {
     const comment = await pool.query(
       "INSERT INTO forum_comments (content, thread_id, user_id, created_at, updated_at) VALUES ($1, $2, $3, $4, $5) RETURNING *",
@@ -52,27 +56,29 @@ export const deleteComment = async (req: Request, res: Response) => {
   }
 };
 
-export const upvoteComment = async (req: Request, res: Response) => {
-  const { id } = req.params;
+export const voteComment = async (req: Request, res: Response) => {
   try {
-    const comment = await pool.query(
-      "UPDATE forum_comments SET upvotes = upvotes + 1 WHERE id = $1 RETURNING *",
-      [id]
+    //check if user has already voted
+    const { type, commentId, userId } = req.params;
+    const vote = await pool.query(
+      `SELECT * FROM comment_votes WHERE comment_id = $1 AND user_id = $2`,
+      [commentId, userId]
     );
-    res.json(comment.rows[0]);
-  } catch (err: any) {
-    console.error(err.message);
-  }
-};
-
-export const downvoteComment = async (req: Request, res: Response) => {
-  const { id } = req.params;
-  try {
+    if (vote.rows.length > 0) {
+      res.status(400).json("You have already voted");
+      return;
+    }
+    //update comment votes
     const comment = await pool.query(
-      "UPDATE forum_comments SET downvotes = downvotes + 1 WHERE id = $1 RETURNING *",
-      [id]
+      `UPDATE forum_comments SET ${type} = ${type} + 1 WHERE id = $1 RETURNING *`,
+      [commentId]
     );
-    res.json(comment.rows[0]);
+    //insert
+    await pool.query(
+      `INSERT INTO comment_votes (comment_id, user_id, type) VALUES ($1, $2, $3)`,
+      [commentId, userId, type === "upvotes" ? 0 : 1]
+    );
+    res.json(comment);
   } catch (err: any) {
     console.error(err.message);
   }
